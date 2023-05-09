@@ -1,0 +1,33 @@
+// These are notes for using H2 database with Spring Boot
+
+// NOTE : Make sure that the table name matches inventory_items
+
+H2 queries :
+// create a table
+CREATE TABLE inventory_items (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    quantity INT
+);
+
+
+
+// insert data
+// update all item to items in the inventory_item table's name column
+INSERT INTO inventory_items (name, quantity) VALUES ('Item 1', 10);
+INSERT INTO inventory_items (name, quantity) VALUES ('Item 2', 20);
+INSERT INTO inventory_items (name, quantity) VALUES ('Item 3', 30);
+INSERT INTO inventory_items (name, quantity) VALUES ('Item 4', 40);
+INSERT INTO inventory_items (name, quantity) VALUES ('Item 5', 50);
+
+
+// verify data
+SELECT * FROM inventory_items;
+
+
+curl commands :
+
+curl -X GET http://localhost:8080/inventory-items
+curl -X GET http://localhost:8080/inventory-items/1
+curl -X POST http://localhost:8080/inventory-items -H 'Content-Type: application/json' -d '{"name": "Item 6", "quantity": 60}'
+
