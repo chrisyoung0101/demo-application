@@ -1,12 +1,13 @@
 package com.example.demo;
 
+import com.example.demo.client.SalesClient;
 import com.example.demo.model.InventoryItem;
+import com.example.demo.model.Sale;
 import com.example.demo.repository.InventoryItemRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -21,8 +22,11 @@ public class DemoApplication implements CommandLineRunner {
 
 	private final InventoryItemRepository inventoryItemRepository;
 
-	public DemoApplication(InventoryItemRepository inventoryItemRepository) {
+	private final SalesClient salesClient;
+
+	public DemoApplication(InventoryItemRepository inventoryItemRepository, SalesClient salesClient) {
 		this.inventoryItemRepository = inventoryItemRepository;
+		this.salesClient = salesClient;
 	}
 
 	public static void main(String[] args) {
@@ -31,6 +35,12 @@ public class DemoApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+
+		Long saleId = 1L; // the ID of the sale you want to retrieve
+		Sale sale = salesClient.getSaleById(saleId);
+		System.out.println("Retrieved from Sales Application: " + sale); // print the retrieved sale
+
+
 		InventoryItem item1 = new InventoryItem(1L,"Item 1", 10);
 		InventoryItem item2 = new InventoryItem(2L, "Item 2", 20);
 		InventoryItem item3 = new InventoryItem(3L, "Item 3", 30);

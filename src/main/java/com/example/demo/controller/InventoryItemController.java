@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.InventoryItem;
 import com.example.demo.repository.InventoryItemRepository;
+import com.example.demo.service.InventoryItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,8 +11,14 @@ import java.util.List;
 @RestController
 public class InventoryItemController {
 
+
+
+    private final InventoryItemService inventoryItemService;
+
     @Autowired
-    private InventoryItemRepository inventoryItemRepository;
+    public InventoryItemController(InventoryItemService inventoryItemService) {
+        this.inventoryItemService = inventoryItemService;
+    }
 
     @GetMapping("/")
     public String index() {
@@ -20,32 +27,30 @@ public class InventoryItemController {
 
     @GetMapping("/inventory-items")
     public List<InventoryItem> getAllInventoryItems() {
-        List<InventoryItem> items = inventoryItemRepository.findAll();
-        System.out.println("Retrieved items: " + items);
-        return items;
+        return inventoryItemService.getAllInventoryItems();
     }
 
     @GetMapping("/inventory-items/{id}")
     public InventoryItem getInventoryItemById(@PathVariable(value = "id") Long id) {
-        return inventoryItemRepository.findById(id).orElseThrow();
+        return inventoryItemService.getInventoryItemById(id);
     }
 
     @PostMapping("/inventory-items")
     public InventoryItem createInventoryItem(@RequestBody InventoryItem inventoryItem) {
-        return inventoryItemRepository.save(inventoryItem);
+        return inventoryItemService.createInventoryItem(inventoryItem);
     }
 
     @DeleteMapping("/inventory-items/{id}")
     public void deleteInventoryItem(@PathVariable(value = "id") Long id) {
-        inventoryItemRepository.deleteById(id);
+        inventoryItemService.deleteInventoryItem(id);
     }
 
     @PutMapping("/inventory-items/{id}")
     public InventoryItem updateInventoryItem(@PathVariable(value = "id") Long id, @RequestBody InventoryItem inventoryItem) {
-        InventoryItem item = inventoryItemRepository.findById(id).orElseThrow();
+        InventoryItem item = inventoryItemService.getInventoryItemById(id);
         item.setName(inventoryItem.getName());
         item.setQuantity(inventoryItem.getQuantity());
-        return inventoryItemRepository.save(item);
+        return inventoryItemService.updateInventoryItem(id, inventoryItem);
     }
 
 }
