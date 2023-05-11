@@ -18,19 +18,19 @@ import java.util.Arrays;
 
 @SpringBootApplication
 @EnableSwagger2
-public class DemoApplication implements CommandLineRunner {
+public class InventoryApplication implements CommandLineRunner {
 
 	private final InventoryItemRepository inventoryItemRepository;
 
 	private final SalesClient salesClient;
 
-	public DemoApplication(InventoryItemRepository inventoryItemRepository, SalesClient salesClient) {
+	public InventoryApplication(InventoryItemRepository inventoryItemRepository, SalesClient salesClient) {
 		this.inventoryItemRepository = inventoryItemRepository;
 		this.salesClient = salesClient;
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
+		SpringApplication.run(InventoryApplication.class, args);
 	}
 
 	@Override
