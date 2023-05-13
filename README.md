@@ -43,4 +43,4 @@ The Inventory Application serves as the backend for the M&P Hardware Store front
 ./sales-app-commit.sh
 
 
-test
+test commit
