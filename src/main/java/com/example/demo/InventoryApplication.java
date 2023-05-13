@@ -36,9 +36,9 @@ public class InventoryApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		Long saleId = 1L; // the ID of the sale you want to retrieve
-		Sale sale = salesClient.getSaleById(saleId);
-		System.out.println("Retrieved from Sales Application: " + sale); // print the retrieved sale
+//		Long saleId = 1L; // the ID of the sale you want to retrieve
+//		Sale sale = salesClient.getSaleById(saleId);
+//		System.out.println("Retrieved from Sales Application: " + sale); // print the retrieved sale
 
 
 		InventoryItem item1 = new InventoryItem(1L,"Item 1", 10);

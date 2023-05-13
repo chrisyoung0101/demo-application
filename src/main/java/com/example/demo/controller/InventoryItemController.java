@@ -1,9 +1,13 @@
 package com.example.demo.controller;
 
+import com.example.demo.client.SalesClient;
 import com.example.demo.model.InventoryItem;
+import com.example.demo.model.Sale;
 import com.example.demo.repository.InventoryItemRepository;
 import com.example.demo.service.InventoryItemService;
+import com.example.demo.service.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,10 +18,15 @@ public class InventoryItemController {
 
 
     private final InventoryItemService inventoryItemService;
+    private final SaleService saleService;
+
+    private final SalesClient salesClient;
 
     @Autowired
-    public InventoryItemController(InventoryItemService inventoryItemService) {
+    public InventoryItemController(InventoryItemService inventoryItemService, SalesClient salesClient, SaleService saleService) {
         this.inventoryItemService = inventoryItemService;
+        this.salesClient = salesClient;
+        this.saleService = saleService;
     }
 
     @GetMapping("/")
@@ -52,5 +61,20 @@ public class InventoryItemController {
         item.setQuantity(inventoryItem.getQuantity());
         return inventoryItemService.updateInventoryItem(id, inventoryItem);
     }
+
+    @GetMapping("/sales/{id}")
+    public ResponseEntity<Sale> getSaleById(Long id) {
+        Sale sale = salesClient.getSaleById(id);
+        return ResponseEntity.ok(sale);
+    }
+
+    @GetMapping("/sales")
+    public ResponseEntity<List<Sale>> getAllSales() {
+        List<Sale> sales = salesClient.getAllSales();
+        saleService.saveSales(sales);
+        return ResponseEntity.ok(sales);
+    }
+
+
 
 }
