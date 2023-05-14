@@ -44,7 +44,7 @@ public class SalesClient {
         List<Sale> sales = response.getBody();
 
         // Prints the retrieved list of sales
-        System.out.println("Sales: " + sales);
+        System.out.println("Sales from SalesClient.getAllSales() : " + sales);
 
         // Returns the list of sales
         return sales;

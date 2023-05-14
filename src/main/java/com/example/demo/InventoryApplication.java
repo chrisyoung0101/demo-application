@@ -1,9 +1,12 @@
 package com.example.demo;
 
 import com.example.demo.client.SalesClient;
+import com.example.demo.model.CombinedDataEntity;
 import com.example.demo.model.InventoryItem;
 import com.example.demo.model.Sale;
+import com.example.demo.pojo.CombinedData;
 import com.example.demo.repository.InventoryItemRepository;
+import com.example.demo.service.CombinedDataService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,6 +18,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Arrays;
+import java.util.List;
 
 @SpringBootApplication
 @EnableSwagger2
@@ -24,9 +28,17 @@ public class InventoryApplication implements CommandLineRunner {
 
 	private final SalesClient salesClient;
 
-	public InventoryApplication(InventoryItemRepository inventoryItemRepository, SalesClient salesClient) {
+	private final CombinedDataService combinedDataService;
+
+
+
+	public InventoryApplication(
+			InventoryItemRepository inventoryItemRepository,
+			SalesClient salesClient,
+			CombinedDataService combinedDataService) {
 		this.inventoryItemRepository = inventoryItemRepository;
 		this.salesClient = salesClient;
+		this.combinedDataService = combinedDataService;
 	}
 
 	public static void main(String[] args) {
@@ -50,7 +62,32 @@ public class InventoryApplication implements CommandLineRunner {
 		InventoryItem item7 = new InventoryItem(7L, "Item 7", 70);
 
 		inventoryItemRepository.saveAll(Arrays.asList(item1, item2, item3, item4, item5, item6, item7));
+
+
+		// Populate the database with combined data on application startup
+		List<CombinedData> combinedDataList = combinedDataService.getCombinedData();
+		System.out.println("Retrieved from Sales Application: " + combinedDataList);
+
+		for (CombinedData combinedData : combinedDataList) {
+			CombinedDataEntity combinedDataEntity = new CombinedDataEntity();
+			combinedDataEntity.setSaleId(combinedData.getSaleId());
+			combinedDataEntity.setSaleDate(combinedData.getSaleDate());
+			combinedDataEntity.setItem(combinedData.getItem());
+			combinedDataEntity.setPrice(combinedData.getPrice());
+			combinedDataEntity.setCustomerName(combinedData.getCustomerName());
+			combinedDataEntity.setInventoryItemId(combinedData.getInventoryItemId());
+			combinedDataEntity.setInventoryItemName(combinedData.getInventoryItemName());
+			combinedDataEntity.setQuantity(combinedData.getQuantity());
+
+			combinedDataService.saveCombinedData(combinedDataEntity);
+		}
+
+
+
 	}
+
+
+
 	@Bean
 	public Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2)

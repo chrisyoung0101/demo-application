@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.client.SalesClient;
+import com.example.demo.model.CombinedDataEntity;
 import com.example.demo.model.InventoryItem;
 import com.example.demo.model.Sale;
 import com.example.demo.repository.InventoryItemRepository;
+import com.example.demo.service.CombinedDataService;
 import com.example.demo.service.InventoryItemService;
 import com.example.demo.service.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class InventoryItemController {
 
 
@@ -20,13 +23,20 @@ public class InventoryItemController {
     private final InventoryItemService inventoryItemService;
     private final SaleService saleService;
 
+    private final CombinedDataService combinedDataService;
+
     private final SalesClient salesClient;
 
     @Autowired
-    public InventoryItemController(InventoryItemService inventoryItemService, SalesClient salesClient, SaleService saleService) {
+    public InventoryItemController(
+            InventoryItemService inventoryItemService,
+            SalesClient salesClient,
+            SaleService saleService,
+            CombinedDataService combinedDataService) {
         this.inventoryItemService = inventoryItemService;
         this.salesClient = salesClient;
         this.saleService = saleService;
+        this.combinedDataService = combinedDataService;
     }
 
     @GetMapping("/")
@@ -63,7 +73,7 @@ public class InventoryItemController {
     }
 
     @GetMapping("/sales/{id}")
-    public ResponseEntity<Sale> getSaleById(Long id) {
+    public ResponseEntity<Sale> getSaleById(@PathVariable(value = "id") Long id) {
         Sale sale = salesClient.getSaleById(id);
         return ResponseEntity.ok(sale);
     }
@@ -75,6 +85,16 @@ public class InventoryItemController {
         return ResponseEntity.ok(sales);
     }
 
+    @GetMapping("/sales/combined/{id}")
+    public ResponseEntity<CombinedDataEntity> getCombinedDataById(@PathVariable(value = "id") Long id) {
+        CombinedDataEntity combinedData = combinedDataService.getCombinedDataById(id);
+        return ResponseEntity.ok(combinedData);
+    }
 
+    @GetMapping("/combined/")
+    public ResponseEntity<List<CombinedDataEntity>> getAllCombinedData() {
+        List<CombinedDataEntity> combinedData = combinedDataService.getAllCombinedData();
+        return ResponseEntity.ok(combinedData);
+    }
 
 }
